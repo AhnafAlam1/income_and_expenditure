@@ -1,44 +1,52 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
-# License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Purpose: Cleans the raw data and combine them to create one dataframe
+# Author: Ahnaf Alam
+# Date: March 13, 2024
+# Contact: ahnaf.alam@mail.utoronto.ca
+# Pre-requisites: download the data in the "data" folder
 
 #### Workspace setup ####
 library(tidyverse)
 
 #### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
+durable <- read_csv("data/raw_data/durable.csv")
+nondurable <- read_csv("data/raw_data/nondurable.csv")
+food <- read_csv("data/raw_data/food.csv")
+income <- read_csv("data/raw_data/income.csv")
+healthcare <- read_csv("data/raw_data/healthcare.csv")
+services<- read_csv("data/raw_data/services.csv")
 
-cleaned_data <-
-  raw_data |>
-  janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
-  mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
-  ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
-  mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
-  ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
-  tidyr::drop_na()
+
+durables <- merge(durable,
+              nondurable,
+              by = "date") |>
+  select("date", "value.x", "value.y") |>
+  rename(durable_expenditure = value.x,
+         nondurable_expenditure = value.y)
+
+
+food_income <- merge(food,
+                  income,
+                  by = "date") |>
+  select("date", "value.x", "value.y") |>
+  rename(food_expenditure = value.x,
+         income_expenditure = value.y)
+
+healthcare_services <- merge(healthcare,
+                             services,
+                             by = "date") |>
+  select("date", "value.x", "value.y") |>
+  rename(healthcare_expenditure = value.x,
+         services_expenditure = value.y)
+
+d_f_i <- merge(durables,
+               food_income,
+               by = "date") 
+
+data <- merge(d_f_i, healthcare_services,
+              by = "date")
+
+
 
 #### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+write_csv(data, "data/analysis_data/data.csv")
