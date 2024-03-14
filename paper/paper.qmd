@@ -75,10 +75,7 @@ formatted_data[1:12,] |>
         format.args = list(big.mark = ",")
         ) |>
   column_spec(c(1, 2, 3, 4, 5, 6, 7), width = "6em") |> 
-  kable_styling(font_size = 9, latex_options = "scale_down") |>
-  footnote(general = "This only shows quarterly data from 2007 to 2009. The actual data set consists of quarterly data
-           from 2007 to 2022",
-           threeparttable = TRUE)
+  kable_styling(font_size = 9, latex_options = "scale_down") 
 ```
 
 
