@@ -1,9 +1,7 @@
 ---
 title: "My title"
 subtitle: "My subtitle if needed"
-author: 
-  - First author
-  - Another author
+author: Ahnaf Alam
 thanks: "Code and data are available at: LINK."
 date: today
 date-format: long
@@ -20,6 +18,12 @@ bibliography: references.bib
 
 library(tidyverse)
 library(palmerpenguins)
+library(ggplot2)
+library(rstanarm)
+library(purrr)
+library(kableExtra)
+data <- read_csv(here::here("data/analysis_data/data.csv"))
+
 ```
 
 
@@ -28,6 +32,9 @@ library(palmerpenguins)
 You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
 
 The remainder of this paper is structured as follows. @sec-data....
+
+
+
 
 
 
@@ -40,14 +47,41 @@ Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 #| fig-cap: Bills of penguins
 #| echo: false
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+data1 <- pivot_longer(data, cols = -date, names_to = "variable", values_to = "value")
+
+data1|>
+  ggplot(aes(x = date, y = value, color = variable)) +
+  geom_line() 
 ```
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: tbl-2
+#| tbl-cap: "Cleaned data showing real expenditure by different categories"
+
+columns_to_format <- names(data)[-1]
+
+formatted_data <- data
+formatted_data[columns_to_format] <- lapply(data[columns_to_format], function(x) sprintf("%.2f", x))
+
+
+formatted_data[1:12,] |> 
+  kable(col.names = c("Date", "Durable goods", "Non-durable goods", "Food", "Disposable income",
+                      "Healthcare", "Services"),
+        booktabs = TRUE,
+        linesep = "",
+        align = "c",
+        format.args = list(big.mark = ",")
+        ) |>
+  column_spec(c(1, 2, 3, 4, 5, 6, 7), width = "6em") |> 
+  kable_styling(font_size = 9, latex_options = "scale_down") |>
+  footnote(general = "This only shows quarterly data from 2007 to 2009. The actual data set consists of quarterly data
+           from 2007 to 2022",
+           threeparttable = TRUE)
+```
+
+
 
 Talk more about it.
 
@@ -60,14 +94,21 @@ And also planes (@fig-planes). (You can change the height and width, but don't w
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+data |>
+  ggplot(aes(x = income_expenditure, y = food_expenditure)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(
+    method = "lm",
+    se = TRUE,
+    color = "black",
+    linetype = "dashed",
+    formula = y ~ x
+  ) +
+  theme_classic() + 
+  labs(
+    x = "Real increase in disposable income",
+    y = "Real increase in food expenditure"
+  )
 ```
 
 Talk way more about it. 
@@ -170,7 +211,7 @@ In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. 
 In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
 
 ```{r}
-#| eval: true
+#| eval: false
 #| echo: false
 #| message: false
 #| warning: false
