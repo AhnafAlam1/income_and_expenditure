@@ -22,6 +22,7 @@ library(ggplot2)
 library(rstanarm)
 library(purrr)
 library(kableExtra)
+
 data <- read_csv(here::here("data/analysis_data/data.csv"))
 
 ```
@@ -43,16 +44,70 @@ The remainder of this paper is structured as follows. @sec-data....
 Some of our data is of penguins (@fig-bills), from @palmerpenguins.
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: fig-1
+#| fig-cap: Relationship between wing length and width
+#| echo: false
+#| warning: false
+#| message: false
+    
+data |>
+  ggplot(aes(x = date, y =income_expenditure)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Date",
+       y = "Real disposable income",
+       )
+```
+
+
+```{r}
+#| label: fig-2
+#| fig-cap: Relationship between wing length and width
+#| echo: false
+#| warning: false
+#| message: false
+    
+data |>
+  ggplot(aes(x = date, y = food_expenditure)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Date",
+       y = "Real food expenditure",
+       )
+```
+
+
+
+```{r}
+#| label: tbl-1
+#| tbl-cap: "Description of cleaned data"
+#| warning: false
+#| message: false
 #| echo: false
 
-data1 <- pivot_longer(data, cols = -date, names_to = "variable", values_to = "value")
 
-data1|>
-  ggplot(aes(x = date, y = value, color = variable)) +
-  geom_line() 
+table1 <-
+  tibble(
+    "Variable"= c("Date", "Durable goods", "Non-durable goods", "Food", "Disposable income",
+                      "Healthcare", "Services"),
+    "Description" = c("Date of data collected",
+                      "Real expenditure in durable goods",
+                      "Real expenditure in non-durable goods",
+                      "Real food expenditure",
+                      "Real disposable income",
+                      "Real expenditure in healthcare",
+                      "Real expenditure in services")
+  )
+
+table1 |>
+  kable(booktabs = TRUE) |>
+  column_spec(c(1, 2)) |>
+  kable_styling(font_size = 9, latex_options = "hold_position")
+
 ```
+
+
+
 
 ```{r}
 #| echo: false
@@ -195,6 +250,9 @@ Weaknesses and next steps should also be included.
 \appendix
 
 # Appendix {-}
+
+We are at the back end of covid-19 pandemic yet risks of another widespread epidemic is still rather underestimated. At the beginning of this pandemic, public health officials were rather caught off-guard with the emergence and virulence of this disease. As such, public were relayed lots of mixed messages regarding what they can do to mitigate the risk of infection and this confusion only added to public panic. Measures like Spain banning smoking in public were, or mandatory gloves Russia and Ukraine  were implemented, which may sound absurd right now, although at the time seemed reasonable. However, public health experts soon realized effectiveness of masks in slowing transmission rate. A meta-analysis, consisting of 6 studies from 4 different countries show that masks significantly reduce transmission risks (OR = 0.38, 95% CI: 0.21-0.69, I2 = 54.1%)  , and among health care workers, masks reduce transmission by as much as 70%. 
+
 
 
 # Additional data details
