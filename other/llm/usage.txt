@@ -57,3 +57,14 @@ formatted_data[1:10,] |>
         booktabs = TRUE)
 In this code, columns_to_format captures the names of all columns except the first one (which presumably is your date column). Then, the lapply function is applied only to the numerical columns, leaving the date column unchanged. Finally, the resulting formatted data frame is printed using kable.
 
+User
+Change me data in that that enables me to create geom_area graphs
+
+ChatGPT
+library(ggplot2)
+
+# Convert 'date' column to Date format
+data$date <- as.Date(data$date)
+
+# Melt the data to long format
+data_long <- reshape2::melt(data, id.vars = "date")

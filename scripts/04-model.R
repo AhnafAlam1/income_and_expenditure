@@ -13,25 +13,46 @@ library(tidyverse)
 library(rstanarm)
 
 #### Read data ####
-analysis_data <- read_csv("data/analysis_data/analysis_data.csv")
+analysis_data <- read_csv(here::here("data/analysis_data/data.csv"))
 
 ### Model data ####
-first_model <-
+model_1 <-
   stan_glm(
-    formula = flying_time ~ length + width,
+    formula = food_expenditure ~ income_expenditure,
     data = analysis_data,
     family = gaussian(),
     prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
     prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
     prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 853
+    seed = 485
   )
+
+
+model_2 <-
+  stan_glm(
+    formula = food_expenditure ~ income_expenditure + durable_expenditure + nondurable_expenditure +
+      healthcare_expenditure + services_expenditure,
+    data = analysis_data,
+    family = gaussian(),
+    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
+    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
+    prior_aux = exponential(rate = 1, autoscale = TRUE),
+    seed = 485
+  )
+
 
 
 #### Save model ####
 saveRDS(
-  first_model,
-  file = "models/first_model.rds"
+  model_1,
+  file = "models/model_1.rds"
 )
+
+saveRDS(
+  model_2,
+  file = "models/model_2.rds"
+)
+
+
 
 
