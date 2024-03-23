@@ -9,6 +9,7 @@ abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 format: pdf
 number-sections: true
 bibliography: references.bib
+toc: true
 ---
 
 ```{r}
@@ -17,14 +18,13 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
 library(ggplot2)
 library(rstanarm)
-library(purrr)
 library(kableExtra)
-library(wesanderson)
 library(viridis)
-library(gridExtra)
+library(testthat)
+library(fredr)
+
 
 data <- read_csv(here::here("data/analysis_data/data.csv"))
 
@@ -44,15 +44,55 @@ The remainder of this paper is structured as follows. @sec-data....
 
 # Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+## Software and R-packages
+
+We create this project using statistical software, `R` [@citeR]. For cleaning and re-purposing the data, we used `tidyverse` [@tidy] package and graphs, we relied on `ggplot2` [@ggplot2]. The data used in this paper comes from [@fredr] package. We further used `rstanarm` [@rstanarm] for modelling. Lastly, we used `kableExtra` [@kable] and `viridis` [@viridis] for aesthetics purposes.
+
+## Incorporating FRED data 
+
+The data comes from FRED or Federal Reserve Economic Data, which is an online database, consisting of hundreds of thousands time series economic data on both US national level and international level. From the database, we incorporated six different datasets using `fredr` package. These were titled:
+
+- Real personal consumption expenditure: Food
+- Real disposable personal income
+- Real personal consumption expenditure: Durable Goods
+- Real personal consumption expenditure: Nondurable Goods
+- Real personal consumption expenditure: Services
+- Real personal consumption expenditure: Healthcare
+
+A detailed description of what each of these datasets reports on can be found on @tbl-1.  There are few key features that are present in all of the datasets. Firstly, we only incorporate data between 2007 and 2022 on a quarterly basis. We used as an 2007 as an anchor because data on durable/nondurable goods is only available from year and we wanted to model our data on 15 year period, hence 2022. 
+
+All the datasets are also seasonally adjusted and chained to 2017 dollars. Seasonally adjusted time series eliminates effect of seasonal influences. Seasonal influences like strikes, abnormal weather patterns, or events Boxing day sale, can distort the real underlying movements in the business cycle and adjusting for these variation, provides us with much clearer understanding of the dataset from period to period. The datasets used 2017 price level as reference point. This adjusts for inflation across time, allowing us to accurately compare economic data over multiple periods. We further adjust for inflation by using real economic data, as opposed to nominal data. This enables us to create valid comparison groups, allowing us to compare a category with another category across time.
+
+## Dataset characteristics
+
+Each dataset contains five different columns, with key ones being date and value. The data variable reports on the specific day on which data was collected. With quarterly data, we only see data on the first day from the months of January, April, August and October. Although quarterly, FRED does not include data for quarter months of August, or indeed December. This is more due to convenience as some data becomes available only after end of the quarter and updating the database on before that is not productive. Lastly, value columns reports on expenditure in billions of US dollars. For a better understanding of how each category measure up against one another, please see @fig-2. @tbl-2 reports in cleaned data that is being used for modelling and analysis. 
+
+
+## Measurement
+
+FRED does not collect data itself but relies on public and private organizations to provide the database with data. Except for first and last observations of the month, FRED ignores missing value when it average, sum and end-of-period aggregation [@fred]. In this context, missing values often arise during statutory holidays, when federal offices are closed. On those weeks, FRED only reports data on 6 days of the week, excluding the holiday and end-of-period calculation will be conducted based whatever the corresponding days are in that month, minus one. 
+
+
+
+
 
 ```{r}
 #| label: fig-1
-#| fig-cap: Levels of real disposable income, in billions of dollars, chained to 2017 prices
+#| fig-cap: Levels of real consumption expenditure and income expenditure, in billions of dollars, chained to 2017 prices
+#| fig-subcap: ["Food expenditure", "Income"]
 #| echo: false
 #| warning: false
 #| message: false
+#| layout-ncol: 2
     
+data |>
+  ggplot(aes(x = date, y = food_expenditure)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Date",
+       y = "Real food expenditure",
+       )
+
 data |>
   ggplot(aes(x = date, y =income_expenditure)) +
   geom_line() +
@@ -63,27 +103,10 @@ data |>
 ```
 
 
-```{r}
-#| label: fig-2
-#| fig-cap: Levels of real consumption expenditure, in billions of dollars, chained to 2017 prices
-#| echo: false
-#| warning: false
-#| message: false
-    
-data |>
-  ggplot(aes(x = date, y = food_expenditure)) +
-  geom_line() +
-  theme_minimal() +
-  labs(x = "Date",
-       y = "Real food expenditure",
-       )
-```
-
-
 
 ```{r}
 #| label: tbl-1
-#| tbl-cap: "Description of cleaned data"
+#| tbl-cap: "Description of the data variables"
 #| warning: false
 #| message: false
 #| echo: false
@@ -91,30 +114,33 @@ data |>
 
 table1 <-
   tibble(
-    "Variable"= c("Date", "Durable goods", "Non-durable goods", "Food", "Disposable income",
+    "Expenditure variable"= c("Date", "Durable goods", "Non-durable goods", "Food", "Disposable income",
                       "Healthcare", "Services"),
     "Description" = c("Date of data collected",
-                      "Real expenditure in durable goods",
-                      "Real expenditure in non-durable goods",
-                      "Real food expenditure",
-                      "Real disposable income",
-                      "Real expenditure in healthcare",
-                      "Real expenditure in services")
+                      "Durable goods are goods that are more for future consumption than immediate consumption. These types
+                      of goods provides utlity over a length of period. Examples include machinery, tools, appliances
+                      among others",
+                      "Durable goods are anything that are generally consumed within a short period of time. Examples
+                      include food, clothing, cosmetics etc",
+                      "Expenditure in food by all Americans in a time period",
+                      "Refers to total income that is availble to individuals for consumption after deducing taxes",
+                      "The category reports on total expenditure on healthcare services, including medical treatments,
+                      medicine cost, physician services among other services",
+                      "This category encomapasses a variety of services, inluding education, transportation,
+                      utilities, hospitality and many others")
   )
 
-table1 |>
-  kable(booktabs = TRUE) |>
-  column_spec(c(1, 2)) |>
-  kable_styling(font_size = 9, latex_options = "hold_position")
-
-
-
+table1 %>%
+  kable("latex", booktabs = TRUE) %>%
+  column_spec(1, width = "2cm") %>%
+  column_spec(2, width = "14cm") %>%
+  kable_styling(latex_options = "hold_position", font_size = 9, position = "center")
 
 ```
 
 
 ```{r}
-#| label: fig-3
+#| label: fig-2
 #| fig-cap: Expenditure for different categories, in billions of 2017 dollars
 #| echo: false
 #| warning: false
@@ -130,7 +156,7 @@ newnames <- c("durable_expenditure" = "Durable goods",
               "nondurable_expenditure" = "Nondurable goods",
               "food_expenditure" = "Food",
               "income_expenditure" = "Disposable income",
-              "healthcare_expenditure" = "Halthcare",
+              "healthcare_expenditure" = "Healthcare",
               "services_expenditure" = "Services")
 
 col <- viridis(6)
@@ -144,10 +170,6 @@ figure <- data_long |>
        fill = "Categories") +
   theme_minimal() +
   scale_fill_manual(values = col, labels = newnames, name = "Categories")
-
-
-
-
 print(figure)
 
 ```
@@ -181,12 +203,10 @@ formatted_data[1:12,] |>
 
 
 
-Talk more about it.
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
 
 ```{r}
-#| label: fig-4
+#| label: fig-3
 #| fig-cap: Relationship between increases in disposable income and increases in food expenditure, between 2007 and 2022.
 #| echo: false
 #| warning: false
@@ -209,12 +229,11 @@ data |>
   )
 ```
 
-Talk way more about it. 
+ 
 
 
 
 # Model
-
 
 
 ```{r}
@@ -233,8 +252,8 @@ second_model <-
 
 modelsummary::modelsummary(
   list(
-    "First Model" = first_model,
-    "Second Model" = second_model
+    "Simple linear" = first_model,
+    "Multiple linear" = second_model
   ),
   statistic = "mad",
   fmt = 2
@@ -323,10 +342,10 @@ In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. Th
 #| echo: false
 #| message: false
 #| warning: false
-#| label: fig-5
+#| label: fig-4
 #| layout-ncol: 2
 #| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check of first model", "Posterior prediction check of second model"]
+#| fig-subcap: ["Posterior prediction check of simple linear regression", "Posterior prediction check of multiple linear regression"]
 
 
 pp_check(first_model) +
@@ -355,7 +374,7 @@ pp_check(second_model) +
 #| eval: true
 #| message: false
 #| warning: false
-#| label: fig-6
+#| label: fig-5
 #| fig-cap: "Checking the convergence of the MCMC algorithm"
 #| fig-subcap: ["Trace plot of Model 1", "Trace plot of model 2"]
 #| layout-ncol: 2
