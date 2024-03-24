@@ -228,14 +228,6 @@ data |>
     y = "Real increase in food expenditure"
   )
 ```
-
- 
-
-
-
-# Model
-
-
 ```{r}
 #| echo: false
 #| warning: false
@@ -261,31 +253,51 @@ modelsummary::modelsummary(
 ```
 
 
-The goal of our modelling strategy is twofold. Firstly,...
+\newpage
 
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+
+# Model
+
+In this section, we briefly discuss Bayesian models that are being used in this analysis. Background details and model diagnostics can be found under [Appendix -@sec-model-details].
 
 ## Model set-up
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+Using `rstanarm` library, we evaluated two Bayesian model, with one being simple linear regression, and another being multiple linear regression. The simple linear regression explores whether an increase in income leads to increase in expenditure in food. Multiple linear regression evaluates the same topic, however, controlling for various other predictors.
 
-\begin{align} 
+### Simple linear regression
+
+Define $y_i$ as the expenditure in food in year $i$. Then $income_i$, is level of disposable income in year $i$, both in billions of US dollars.
+
+\begin{align}
 y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
+\mu_i &= \beta_0 + \beta_1 \times \mbox{income}_i \\
+\beta_0 &\sim \mbox{Normal}(0, 279) \\
+\beta_1 &\sim \mbox{Normal}(0, 0.17) \\
+\sigma &\sim \mbox{Exponential}(0.009)
 \end{align}
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
 
-### Model justification
+### Multiple linear regression
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
+Define $y_i$ as the expenditure in food in year $i$. Then $income_i$, is level of disposable income in year $i$. Model further controls for durable goods with $durable_i$, non-durable goods with $nondurable_i$, levels of health care expenditure with $healthcare_i$ and levels of expenditure in services with $services_i$. All the variables are in billions of US dollars.
 
-We can use maths by including latex between dollar signs, for instance $\theta$.
+\begin{align}
+y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
+\mu_i &= \beta_0 + \beta_1 \mbox{income}_i + \beta_2 \mbox{durable}_i + \beta_3 \mbox{nondurable}_i +  \beta_4 \mbox{healthcare}_i + \beta_5 \mbox{services}_i\\
+\beta_0 &\sim \mbox{Normal}(0, 279) \\
+\beta_1 &\sim \mbox{Normal}(0, 0.17) \\
+\beta_2 &\sim \mbox{Normal}(0, 0.84) \\
+\beta_3 &\sim \mbox{Normal}(0, 0.95) \\
+\beta_4 &\sim \mbox{Normal}(0, 1.25) \\
+\beta_5 &\sim \mbox{Normal}(0, 0.27) \\
+\sigma &\sim \mbox{Exponential}(0.009)
+\end{align}
+
+
+## Model justification
+
+We expect a positive relationship between between income and food expenditure. @fig-3 shows that for an increase an disposable income, food expenditure increases by approximately equal amount. Further, @fig-1 compares both of these variables over time and we see similar patterns of growth, with steady exponential increase in between 2010 and 2020 and both measures veer off after 2020, presumably due to Covid-19 downturn. A paper by @parker1997household looks at data from Mexico and finds that income and expenditure are correlated. In fact, lower income uninsured groups reduces cash expenditure on health care during economic crisis. @mahadea2008economic further considers relationship between between happiness and incomes and finds that economic growth and increased income contributes to happiness. Therefore, based on exploratory data analysis and theories, we believe that there is positive relationship between food expenditure and income levels. 
 
 
 # Results
@@ -319,7 +331,7 @@ Weaknesses and next steps should also be included.
 
 # Appendix {-}
 
-We are at the back end of covid-19 pandemic yet risks of another widespread epidemic is still rather underestimated. At the beginning of this pandemic, public health officials were rather caught off-guard with the emergence and virulence of this disease. As such, public were relayed lots of mixed messages regarding what they can do to mitigate the risk of infection and this confusion only added to public panic. Measures like Spain banning smoking in public were, or mandatory gloves Russia and Ukraine  were implemented, which may sound absurd right now, although at the time seemed reasonable. However, public health experts soon realized effectiveness of masks in slowing transmission rate. A meta-analysis, consisting of 6 studies from 4 different countries show that masks significantly reduce transmission risks (OR = 0.38, 95% CI: 0.21-0.69, I2 = 54.1%)  , and among health care workers, masks reduce transmission by as much as 70%. 
+
 
 
 
