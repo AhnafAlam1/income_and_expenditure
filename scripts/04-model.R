@@ -1,11 +1,10 @@
 #### Preamble ####
-# Purpose: Models... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
-# License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Purpose: Models the 
+# Author: Ahnaf Alam
+# Date: March 29, 2024
+# Contact: ahnaf.alam@mail.utoronto.ca
+# Pre-requisites: Download and clean the data
+# Any other information needed?: None
 
 
 #### Workspace setup ####

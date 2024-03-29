@@ -2,7 +2,7 @@
 title: "My title"
 subtitle: "My subtitle if needed"
 author: Ahnaf Alam
-thanks: "Code and data are available at: LINK."
+thanks: "Code and data are available at https://github.com/AhnafAlam1/income_and_expenditure/tree/main"
 date: today
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
@@ -91,7 +91,7 @@ data |>
   geom_line() +
   theme_minimal() +
   labs(x = "Date",
-       y = "Real food expenditure",
+       y = "Changes in real food expenditure",
        )
 
 data |>
@@ -99,7 +99,7 @@ data |>
   geom_line() +
   theme_minimal() +
   labs(x = "Date",
-       y = "Real disposable income",
+       y = "Changes in real disposable income",
        )
 ```
 
@@ -245,8 +245,8 @@ second_model <-
 
 modelsummary::modelsummary(
   list(
-    "Simple linear" = first_model,
-    "Multiple linear" = second_model
+    "Model 1" = first_model,
+    "Model 2" = second_model
   ),
   statistic = "mad",
   fmt = 2
@@ -303,7 +303,16 @@ We expect a positive relationship between between income and food expenditure. @
 
 # Results
 
-Our results are summarized in @tbl-modelresults.
+Our findings are outlined in @tbl-3. In simple linear regression, we observed an estimated intercept of 24.07 billion USD. Additionally, for every 1 billion USD increase in disposable income, there's a corresponding rise in food expenditure of $70 million USD. The small standard deviation suggests a low level of variability and uncertainty.
+
+In multiple linear regression, we found an estimated intercept of -97.40 billion USD. With each $1 billion USD increase in income, food expenditure increased by 20 million USD. Similar to the simple regression model, the standard deviation is negligibly small.
+
+Both models exhibit similar adjusted $R^2$ values, yet the second model slightly outperforms the first with a higher value (0.993 vs 0.990), indicating a superior fit. Notably, the root mean square error (RSME) for the second model is substantially lower than that of the first (10.36 vs 27.49), indicating enhanced predictive accuracy.
+
+@fig-1 illustrates quarterly changes in disposable income and food expenditure from 2007 to 2022. Both variables show consistent growth trends, with 33.9% increase in disposable income and 32.5% increase in expenditure in food in this period. We see a notable surge in disposable income in 2020 due to COVID-era relief efforts. However, this increase was followed by a decline as restrictions eased, allowing for increased spending towards the end of 2021.
+
+@fig-2 displays the distribution of expenditure across categories, highlighting durable and non-durable goods as the largest expenditures. This aligns with expectations given the nature of these commodities. Following closely are food expenditure and disposable income, reflecting a strong correlation evident in @fig-3, where a clear linear relationship is observed with small standard deviations. Finally, healthcare and services expenditure are clustered together.
+
 
 
 
