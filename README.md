@@ -1,4 +1,4 @@
-# We llok to find how food expenditure changes when income increases
+# We look to find how food expenditure changes when income increases
 
 ## Overview
 
@@ -21,4 +21,4 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-Aspects of the code were written with the help of ChatGPT. The entire chat history is available in inputs/llms/usage.txt.
+Aspects of the code were written with the help of ChatGPT. The entire chat history is available in `other/llms/usage.txt`.
