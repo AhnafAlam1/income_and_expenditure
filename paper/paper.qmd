@@ -1,6 +1,6 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "You have more money in your wallet. Does that mean you will spend extra on food?"
+subtitle: "I analyze the relationship between disposable income and food expenditure for American consumers"
 author: Ahnaf Alam
 thanks: "Code and data are available at https://github.com/AhnafAlam1/income_and_expenditure/tree/main"
 date: today
@@ -153,14 +153,15 @@ data$date <- as.Date(data$date)
 
 data_long <- reshape2::melt(data, id.vars = "date")
 
+
+col <- viridis(6)
+
 newnames <- c("durable_expenditure" = "Durable goods",
               "nondurable_expenditure" = "Nondurable goods",
               "food_expenditure" = "Food",
               "income_expenditure" = "Disposable income",
               "healthcare_expenditure" = "Healthcare",
               "services_expenditure" = "Services")
-
-col <- viridis(6)
 
 figure <- data_long |>
   ggplot( aes(x = date, y = value, fill = variable)) +
@@ -323,17 +324,26 @@ Both models exhibit similar adjusted $R^2$ values, yet the second model slightly
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+@tbl-3 finds that for every billion dollar increase in disposable income, average expenditure in food goes up between 20 million USD and 70 million USD. This proves our hypothesis that there is a linear relationship between income and food consumption, with the models estimating economic significance of $70,000,000/1,000,000,000$ or 7% increase. In the upcoming section, we look to answer why we get a low economically significant value by assessing the role of savings
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
 
-## Second discussion point
 
-## Third discussion point
+## Accounting for savings 
 
-## Weaknesses and next steps
+A factor that may explain our low economic significance is that individuals choosing to save their income instead of spending. As income rises, consumption only rises by a fraction of the income [@krugman]. It is plausible that as disposable increases, people rather chooses to save their additional income rather than to consume it. @mody2012precautionary analyzes the relationship between economic downturns and savings rate and finds that in advanced economies, income uncertainty is associated with higher household savings. @lusk2021consumer further looks to behavior of spending on food, specifically analyzing Covid-19 pandemic and finds that spending on food typically decreases during recessions. All this points suggests that increased level of saving, certainly could explain why people would choose to spend less on food and opt to save for future consumption. 
 
-Weaknesses and next steps should also be included.
+
+
+## Interpreting consumer behavior
+
+Current research suggests that higher income leads to higher expenditure on factors like durable goods. Consumers simply chooses to spend majority of their additional income on goods that provide utility over a considerable period of time than to spending on goods that will be consume over a single period. @lee1964income utilizes a linear probability function and finds that for durable goods, consumers typically adjust upwards in response to income increase and furthermore, they resist a downwards adjustment when income falls. This trend was visible during Covid-19 pandemic where increased disposable income led to higher than average spending on durable goods, including furniture and appliances, followed by motor vehicles and recreational goods [@tauber2021why]. Therefore, it could simply be the case that food expenditure is less elastic to income shocks, compared to other factors like durable goods. 
+
+
+
+
+
+
+
 
 \newpage
 
