@@ -5,7 +5,8 @@ author: Ahnaf Alam
 thanks: "Code and data are available at https://github.com/AhnafAlam1/income_and_expenditure"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+classoption: abstract
+abstract: "We estimated how food spending changes when disposable income increases. Using both a simple linear regression model and a multiple regression model, we found an economically insignificant increase of 20 million USD for every billion dollar increase in disposable income. At a policy level, our conclusion suggests that focusing solely on disposable income will not significantly affect food spending patterns. Policies aimed at stimulating consumer spending must consider other avenues."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -30,13 +31,21 @@ data <- read_csv(here::here("data/analysis_data/data.csv"))
 
 ```
 
+
 \newpage
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
+Wages have been going up in the US for the past thirty years, which usually means people have more money to spend after taxes. This extra money, called disposable income, is what's left over after taxes are taken out of a person's income. It's an important thing to look at because it shows how much money people have to spend. Research shows that when people have more disposable income, they tend to spend more money [@friend1946relationship]. We're interested in how strong this connection is when it comes to one specific thing: food.
 
-The remainder of this paper is structured as follows. @sec-data....
+Food is something everyone needs to live. People might change what kinds of food they like over time, but everyone still needs to eat. In this project, we're looking at how closely linked disposable income is to how much people spend on food. This matters because if there's a strong connection, it suggests that when people make more money, they tend to spend more on basics like food. This could help predict how much people will spend on luxury items in the future. For instance, if we find a strong connection, it might mean that when people earn more, they spend a bigger chunk of their money on essentials like food, leaving less for luxury items.
+
+
+Numerous studies, notably summarized by Ernst Engel's law, suggest that as income and family size increase, spending on food goes up, but the proportion of income spent on food decreases [@lewbel2008engel]. This means wealthier families tend to spend more on food, but it's a smaller part of their overall income. Taking inspiration from Engel's law, we want to see how food spending changes when we look at other spending categories instead of just income differences across families.
+
+Additionally, most past studies used income as the predictor variable, but we're using disposable income because we think it gives a better idea of overall wealth. The estimand of this paper is the measure of how much food spending changes (in billions of USD) when disposable income increases by a billion USD.
+
+In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. 
 
 
 
@@ -258,7 +267,7 @@ modelsummary::modelsummary(
 \newpage
 
 
-# Model
+# Model {#sec-model}
 
 In this section, we briefly discuss Bayesian models that are being used in this analysis. Background details and model diagnostics can be found under [Appendix -@sec-model-details].
 
@@ -302,7 +311,7 @@ y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
 We expect a positive relationship between between income and food expenditure. @fig-3 shows that for an increase an disposable income, food expenditure increases by approximately equal amount. Further, @fig-1 compares both of these variables over time and we see similar patterns of growth, with steady exponential increase in between 2010 and 2020 and both measures veer off after 2020, presumably due to Covid-19 downturn. A paper by @parker1997household looks at data from Mexico and finds that income and expenditure are correlated. In fact, lower income uninsured groups reduces cash expenditure on health care during economic crisis. @mahadea2008economic further considers relationship between between happiness and incomes and finds that economic growth and increased income contributes to happiness. Therefore, based on exploratory data analysis and theories, we believe that there is positive relationship between food expenditure and income levels. 
 
 
-# Results
+# Results {#sec-res}
 
 Our findings are outlined in @tbl-3. In simple linear regression, we observed an estimated intercept of 24.07 billion USD. Additionally, for every 1 billion USD increase in disposable income, there's a corresponding rise in food expenditure of $70 million USD. The small standard deviation suggests a low level of variability and uncertainty.
 
@@ -323,7 +332,7 @@ Both models exhibit similar adjusted $R^2$ values, yet the second model slightly
 
 
 
-# Discussion
+# Discussion {#sec-dis}
 
 @tbl-3 finds that for every billion dollar increase in disposable income, average expenditure in food goes up between 20 million USD and 70 million USD. This proves our hypothesis that there is a linear relationship between income and food consumption, with the models estimating economic significance of $70,000,000/1,000,000,000$ or 7% increase. In the upcoming section, we look to answer why we get a low economically significant value by assessing the role of savings
 
