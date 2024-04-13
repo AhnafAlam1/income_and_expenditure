@@ -9,6 +9,7 @@
 #### Workspace setup ####
 library(tidyverse)
 library(testthat)
+library(lubridate)
 
 
 #### Test data ####
@@ -56,6 +57,35 @@ if (all(diff(data$date) > 0)) {
 } else {
   print("Dates are not in chronological order.")
 }
+
+
+#6.Test to see if all the quarterly data are in quarter months or not i.e. January, April, August, December
+
+q_dates <- function(dates) {
+  months <- month(dates)
+  q_months <-  c(1,4,8,12)
+  all(months %in% q_months)
+}
+
+test_that("Check quarterly dates", {
+  expect_true(q_dates(data$date))
+})
+
+#7. We check there are data for 4 distinct months for each year
+
+check_four_months <- function(data) {
+  data %>%
+    mutate(year = lubridate::year(date), 
+           month = lubridate::month(date)) |>
+    group_by(year) |>
+    summarise(num_months = n_distinct(month)) |>
+    mutate(check = num_months == 4)
+}
+
+
+
+
+
 
 
 

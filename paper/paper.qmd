@@ -38,13 +38,11 @@ data <- read_csv(here::here("data/analysis_data/data.csv"))
 
 # Introduction
 
-Wages have been going up in the US for the past thirty years, which usually means people have more money to spend after taxes. This extra money, called disposable income, is what's left over after taxes are taken out of a person's income. It's an important thing to look at because it shows how much money people have to spend. Research shows that when people have more disposable income, they tend to spend more money [@friend1946relationship]. We're interested in how strong this connection is when it comes to one specific thing: food.
+Over the past thirty years in the US, wages have consistently risen, while tax rates have remained relatively stable. This has resulted in people having more disposable income, which is the money left after taxes are deducted from one's income. Disposable income is crucial to consider as it reflects the actual amount of money available for spending. Studies indicate that when individuals have higher disposable income, they generally spend more [@friend1946relationship]. We are particularly interested in examining this relationship in the context of food.
 
-Food is something everyone needs to live. People might change what kinds of food they like over time, but everyone still needs to eat. In this project, we're looking at how closely linked disposable income is to how much people spend on food. This matters because if there's a strong connection, it suggests that when people make more money, they tend to spend more on basics like food. This could help predict how much people will spend on luxury items in the future. For instance, if we find a strong connection, it might mean that when people earn more, they spend a bigger chunk of their money on essentials like food, leaving less for luxury items.
+Food is something everyone needs to live. People might change what kinds of food they like over time, but everyone still needs to eat. In this project, we're looking at how closely linked disposable income is to how much people spend on food. This matters because if there's a strong connection, it suggests that when people make more money, they tend to spend more on basic goods and services like food. Further, this could help predict how much people will spend on luxury items in the future. For instance, if we find a strong connection, it might mean that when people earn more, they spend a bigger chunk of their money on essentials like food, leaving less for luxury items.
 
-Numerous studies, notably summarized by Ernst Engel's law, suggest that as income and family size increase, spending on food goes up, but the proportion of income spent on food decreases [@lewbel2008engel]. This means wealthier families tend to spend more on food, but it's a smaller part of their overall income. Taking inspiration from Engel's law, we want to see how food spending changes when we look at other spending categories instead of just income differences across families.
-
-Additionally, most past studies used income as the predictor variable, but we're using disposable income because we think it gives a better idea of overall wealth. The estimand of this paper is the measure of how much food spending changes (in billions of USD) when disposable income increases by a billion USD.
+Numerous studies, notably summarized by Ernst Engel's law, suggest that as income and family size increase, spending on food goes up. However, the proportion of income spent on food decreases [@lewbel2008engel]. This means wealthier families tend to spend more on food, but it is a smaller part of their overall income. Taking inspiration from Engel's law, we want to see how food spending changes when we account for other spending categories instead of just income differences across families. Additionally, most past studies used income as the predictor variable, but we're using disposable income because we think it gives a better idea of overall wealth. The estimand of this paper is the measure of how much food spending changes (in billions of USD) when disposable income increases by a billion USD.
 
 In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. 
 
@@ -86,9 +84,6 @@ Furthermore, the "value" column records expenditures in billions of US dollars. 
 FRED, rather than directly collecting data, relies on contributions from both public and private organizations to populate its database. When aggregating data through averaging, summing, or end-of-period calculations, FRED typically overlooks missing values, except for the first and last observations of each month [@fred].
 
 Missing values commonly occur during statutory holidays, when federal offices are closed. Consequently, during such weeks, FRED reports data for only six days, excluding the holiday. End-of-period calculations are adjusted accordingly, based on the remaining available days within the month, minus one. 
-
-
-
 
 
 ```{r}
@@ -267,7 +262,6 @@ modelsummary::modelsummary(
 ```
 
 
-\newpage
 
 
 # Model {#sec-model}
@@ -327,14 +321,6 @@ Both models exhibit similar adjusted $R^2$ values, yet the second model slightly
 @fig-1 illustrates quarterly changes in disposable income and food expenditure from 2007 to 2022. Both variables show consistent growth trends, with 33.9% increase in disposable income and 32.5% increase in expenditure in food in this period. We see a notable surge in disposable income in 2020 due to COVID-era relief efforts. However, this increase was followed by a decline as restrictions eased, allowing for increased spending towards the end of 2021.
 
 @fig-2 displays the distribution of expenditure across categories, highlighting durable and non-durable goods as the largest expenditures. This aligns with expectations given the nature of these commodities. Following closely are food expenditure and disposable income, reflecting a strong correlation evident in @fig-3, where a clear linear relationship is observed with small standard deviations. Finally, healthcare and services expenditure are clustered together.
-
-
-
-
-
-
-
-
 
 
 
