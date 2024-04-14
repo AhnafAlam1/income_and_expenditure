@@ -1,12 +1,12 @@
 ---
-title: "You have more money in your wallet. Does that mean you will spend extra on food?"
-subtitle: "I analyze the relationship between disposable income and food expenditure for American consumers"
+title: "You have more money in your wallet. This does not mean you will spend extra on food"
+subtitle: "Examining the relationship between disposable income and food expenditure for American consumers"
 author: Ahnaf Alam
 thanks: "Code and data are available at https://github.com/AhnafAlam1/income_and_expenditure"
 date: today
 date-format: long
 classoption: abstract
-abstract: "We estimated how food spending changes when disposable income increases. Using both a simple linear regression model and a multiple regression model, we found an economically insignificant increase of 20 million USD for every billion dollar increase in disposable income. At a policy level, our conclusion suggests that focusing solely on disposable income will not significantly affect food spending patterns. Policies aimed at stimulating consumer spending must consider other avenues."
+abstract: "We examined the relationship between changes in food spending and increases in disposable income. Utilizing quarterly country-level data from the Federal Reserve Economic Data (FRED) spanning a 15-year period from 2007 to 2022, we employed both a simple linear regression model and a multiple regression model. Our analysis revealed a economically insignificant increase of $20 million in food spending for every billion-dollar rise in disposable income. From a policy perspective, our findings indicate that solely targeting disposable income is unlikely to substantially impact food spending behaviors. Therefore, policies designed to boost consumer spending should explore alternative approaches."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -59,7 +59,7 @@ We create this project using statistical software, `R` [@citeR]. For cleaning an
 
 ## Incorporating FRED data 
 
-We gathered our data from FRED, the Federal Reserve Economic Data, an extensive online database housing a multitude of economic time series, both at the US national and international levels. Utilizing the `fredr` package, we integrated six distinct datasets into one dataframe. These datatsets were:
+We gathered our data from Federal Reserve Economic Data (FRED), an extensive online database housing a multitude of economic time series, both at the US national and international levels. Utilizing the `fredr` package, we integrated six distinct datasets into one dataframe. These datatsets were:
 
 - Real personal consumption expenditure: Food
 - Real disposable personal income
@@ -81,7 +81,9 @@ Furthermore, the "value" column records expenditures in billions of US dollars. 
 
 ## Measurement
 
-FRED, rather than directly collecting data, relies on contributions from both public and private organizations to populate its database. When aggregating data through averaging, summing, or end-of-period calculations, FRED typically overlooks missing values, except for the first and last observations of each month [@fred].
+FRED datasets, essentially time series variants, are compiled by the US Federal Reserve and sourced from government agencies like the U.S. Census Bureau, Bureau of Labor Statistics, and U.S. Bureau of Economic Analysis (BEA), among others. These datasets are aggregated at the country level. We use national-level data because it provides a broader perspective on general economic trends in the U.S. All five datasets we have used originate from the BEA. The BEA gathers data from over 360 surveys and collections sponsored by various Federal and private agencies. Upon receiving these datasets, BEA makes adjustments to the raw survey data. For instance, they fill in missing gaps in the datasets. For example, when estimating changes in private inventories for Gross Domestic Product (GDP), the primary survey is the Census Bureau’s Monthly Wholesale Trade Survey does not include inventories from nonmerchant sellers. Therefore, BEA incorporates a separate survey to fill this gap, giving us a more comprehensive view of the overall economic conditions.
+
+FRED collaborates with both public and private organizations, such as the BEA, to populate its comprehensive database. The goal of FRED is to serve as a centralized data bank where you can find information on all facets of the U.S. economy, eliminating the need to search various agencies individually for data. However, FRED does make further adjustments to BEA datasets before releasing them. For example, when aggregating data through averaging, summing, or end-of-period calculations, FRED typically overlooks missing values, except for the first and last observations of each month [@fred].
 
 Missing values commonly occur during statutory holidays, when federal offices are closed. Consequently, during such weeks, FRED reports data for only six days, excluding the holiday. End-of-period calculations are adjusted accordingly, based on the remaining available days within the month, minus one. 
 
@@ -192,7 +194,7 @@ print(figure)
 #| echo: false
 #| warning: false
 #| label: tbl-2
-#| tbl-cap: "Cleaned data showing real expenditure by different categories"
+#| tbl-cap: "Cleaned data showing real expenditure by different categories (in billions of 2017 US dollars)"
 
 columns_to_format <- names(data)[-1]
 
@@ -209,7 +211,8 @@ formatted_data[1:12,] |>
         format.args = list(big.mark = ",")
         ) |>
   column_spec(c(1, 2, 3, 4, 5, 6, 7), width = "6em") |> 
-  kable_styling(font_size = 9, latex_options = "scale_down") 
+  kable_styling(font_size = 9, latex_options = "scale_down")  |>
+  add_footnote(c("Note: The table displays data from 2007-2009 to illustrate the of the aggregated clean data. Including the entire dataset would be redundant and unnecessarily clutter the display."))
 ```
 
 
@@ -278,10 +281,10 @@ Define $y_i$ as the expenditure in food in year $i$. Then $income_i$, is level o
 
 \begin{align}
 y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \beta_0 + \beta_1 \times \mbox{income}_i \\
+\mu_i &= \beta_0 + \beta_1 \times \mbox{income}_i + \epsilon\\
 \beta_0 &\sim \mbox{Normal}(0, 279) \\
 \beta_1 &\sim \mbox{Normal}(0, 0.17) \\
-\sigma &\sim \mbox{Exponential}(0.009)
+\sigma &\sim \mbox{Exponential}(0.009) \\
 \end{align}
 
 
@@ -292,7 +295,7 @@ Define $y_i$ as the expenditure in food in year $i$. Then $income_i$, is level o
 
 \begin{align}
 y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \beta_0 + \beta_1 \mbox{income}_i + \beta_2 \mbox{durable}_i + \beta_3 \mbox{nondurable}_i +  \beta_4 \mbox{healthcare}_i + \beta_5 \mbox{services}_i\\
+\mu_i &= \beta_0 + \beta_1 \mbox{income}_i + \beta_2 \mbox{durable}_i + \beta_3 \mbox{nondurable}_i +  \beta_4 \mbox{healthcare}_i + \beta_5 \mbox{services}_i + \epsilon\\
 \beta_0 &\sim \mbox{Normal}(0, 279) \\
 \beta_1 &\sim \mbox{Normal}(0, 0.17) \\
 \beta_2 &\sim \mbox{Normal}(0, 0.84) \\
@@ -307,7 +310,14 @@ y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
 
 We anticipate a positive correlation between income and food expenditure. As depicted in @fig-3, an increase in disposable income corresponds to a similar rise in food expenditure. Additionally, @fig-1 compares these variables over time, revealing parallel growth patterns. Both exhibit a consistent, exponential increase between 2010 and 2020, followed by a divergence after 2020, likely due to the COVID-19 downturn.
 
-@sekhampu2012socio analyzes data from South Africa and employs a multiple linear regression model. The study concludes that household income, size, age, and employment status exert a significant positive influence on food expenditure. Likewise, @liu2019off utilizes Chinese data and a two-stage least squares estimator. Their findings reveal that for every 1,000 yuan increase in per-capita income, food expenditure rises by 61 yuan. Drawing from our exploratory data analysis and existing theories, we hypothesize a positive correlation between food expenditure and income levels. Therefore, we believe that both simple linear regression and multiple linear regression models are appropriate for addressing our research question.
+@sekhampu2012socio analyzes data from South Africa and employs a multiple linear regression model. The study concludes that household income, size, age, and employment status exert a significant positive influence on food expenditure. Likewise, @liu2019off utilizes Chinese data and a two-stage least squares estimator. Their findings reveal that for every 1,000 yuan increase in per-capita income, food expenditure rises by 61 yuan. Drawing from our exploratory data analysis and existing theories, we hypothesize a positive correlation between food expenditure and income levels. Therefore, we believe linear models would be appropriate for modelling our hypothesis. 
+
+We utilize two linear models in our analysis: simple linear regression and multiple regression. Simple linear regression enables us to easily quantify the linear association between food expenditure and disposable income, as illustrated by @fig-3. However, this model has limitations. Most notably, it does not account for confounding variables, and it requires us to make unrealistic assumptions about the independence of the error term ($\epsilon$) and the predictor variable, income. This assumption implies that food expenditure and income are entirely independent of each other, which is problematic. Factors like economic downturns, income levels, and other variables can correlate with our model variables.
+
+To address these issues, we employ a multiple linear regression model. This model helps us control for potential confounding variables, such as expenditure on non-durable goods, which may influence consumer expenditure on food. Using multiple linear regression allows us to better isolate the effect of income on food expenditure.
+
+Between the two models, the multiple linear regression model may be more preferable than the simple linear regression model. Simple linear regression requires unrealistic assumptions that the multiple linear regression model relaxes. Furthermore, posterior predictive checks conducted for both models suggest that the multiple regression model may offer a better fit than the simple linear regression model. For more details, please refer to @sec-model-details.
+
 
 # Results {#sec-res}
 

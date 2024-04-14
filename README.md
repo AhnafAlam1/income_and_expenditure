@@ -1,11 +1,8 @@
-# We look to find how food expenditure changes when income increases
+# An investigation into disposable income and food expenditure
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
-
-To use this folder, click the green "Code" button", then "Download ZIP". Move the downloaded folder to where you want to work on your own computer, and then modify it to suit.
-
+Using data from Federal Reserve Economic Data ([FRED](https://fred.stlouisfed.org/)), we look to find how expenditure in food changes as disposable income goes up. Our investigation suggests that food expenditure does increase when disposable increases, however, the effects are modest as best. 
 
 ## File Structure
 
