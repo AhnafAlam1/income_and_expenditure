@@ -13,18 +13,25 @@ library(tidyverse)
 
 #### Simulate data ####
 
-set.seed(37373)
+set.seed(37373) # For replication purposes
 
-dates <- seq(as.Date("2007-01-01"), by = "quarter", length.out = 60)
 
-# Without controls
+
+# As discussion in the main paper, we look quaterly economic data from 2007 to 2022, which is a 15-year span, 
+# with 60 months totals. FRED releases quaterly data on the first on each quater months, hence, all dates being on the 1st.
+
+dates <- seq(as.Date("2007-01-01"), by = "quarter", length.out = 60) 
+
+# We simulate the primary outcome and predictor variables, food and income. We simulate with data ~ N(950,150). These are 
+# arbitrary values. 
 sim_data <- tibble(
   Date = dates,
   food = rnorm(60, mean = 950, sd = 150),
   income = rnorm(60, mean = 1350, sd = 150)
 )
 
-# Adding in controls
+# We simulate the control variables. these include disposable/disposable, services and healthcare spending.
+# Again, these normal distribution and the values do not signify the actual data. 
 
 sim_data_controls <- tibble(
   Date = dates,

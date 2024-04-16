@@ -44,8 +44,6 @@ Food is something everyone needs to live. People might change what kinds of food
 
 Numerous studies, notably summarized by Ernst Engel's law, suggest that as income and family size increase, spending on food goes up. However, the proportion of income spent on food decreases [@lewbel2008engel]. This means wealthier families tend to spend more on food, but it is a smaller part of their overall income. Taking inspiration from Engel's law, we want to see how food spending changes when we account for other spending categories instead of just income differences across families. Additionally, most past studies used income as the predictor variable, but we're using disposable income because we think it gives a better idea of overall wealth. The estimand of this paper is the measure of how much food spending changes (in billions of USD) when disposable income increases by a billion USD.
 
-In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed any a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future.
-
 
 In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. Datasheet and model checks can be found under [Appendix -@sec-model-details]. 
 
@@ -111,8 +109,6 @@ formatted_data[1:12,] |>
   kable_styling(font_size = 9, latex_options = "scale_down")  |>
   add_footnote(c("Note: The table displays data from 2007-2009 to illustrate the aggregated clean data. Including the entire dataset would be redundant and unnecessarily clutter the display."))
 ```
-
-
 
 
 ## Incorporating FRED data 
@@ -282,7 +278,6 @@ data |>
   )
 ```
 
-
 We anticipate a positive correlation between income and food expenditure. As depicted in @fig-3, an increase in disposable income corresponds to a similar rise in food expenditure. Additionally, @fig-1 compares these variables over time, revealing parallel growth patterns. Both exhibit a consistent, exponential increase between 2010 and 2020, followed by a divergence after 2020, likely due to the COVID-19 downturn.
 
 @sekhampu2012socio analyzes data from South Africa and employs a multiple linear regression model. The study concludes that household income, size, age, and employment status exert a significant positive influence on food expenditure. Likewise, @liu2019off utilizes Chinese data and a two-stage least squares estimator. Their findings reveal that for every 1,000 yuan increase in per-capita income, food expenditure rises by 61 yuan. Drawing from our exploratory data analysis and existing theories, we hypothesize a positive correlation between food expenditure and income levels. Therefore, we believe linear models would be appropriate for modelling our hypothesis. 
@@ -334,7 +329,7 @@ modelsummary::modelsummary(
 
 # Discussion {#sec-dis}
 
-@tbl-3 has discovered that for every billion-dollar rise in disposable income, the average expenditure on food increases by an amount ranging from 20 million USD to 70 million USD. This validates our hypothesis, suggesting a direct correlation between income and food consumption. According to the models, this translates to an economic significance of $70,000,000/$1,000,000,000, equivalent to a 7% increase. In the following section, we talk about the reasons behind relatively low economic significance, exploring the impact of savings, consumer behavior and elastiticies, followed by potential weaknesses in our paper.
+@tbl-3 has discovered that for every billion-dollar rise in disposable income, the average expenditure on food increases by an amount ranging from 20 million USD to 70 million USD. This validates our hypothesis, suggesting a direct correlation between income and food consumption. According to the models, this translates to an economic significance of $20,000,000/$1,000,000,000, equivalent to a 2% increase. In the following section, we talk about the reasons behind relatively low economic significance, exploring the impact of savings, consumer behavior and elastiticies, followed by potential weaknesses in our paper.
 
 
 
@@ -349,22 +344,22 @@ Current research suggests that higher income tends to result in increased expend
 
 ## Factoring in elasticities {#sec-ela}
 
-The income and price elasticities of food are crucial factors in understanding why there's not much change in food spending despite changes in income. Income elasticity measures how much food demand shifts when income changes, while price elasticity assesses the impact of price changes on food demand.
+The income and price elasticities of food are crucial factors in understanding why there is not much change in food spending despite changes in income. Income elasticity measures how much food demand shifts when income changes, while price elasticity assesses the impact of price changes on food demand.
 
 A study by @almaas2019income in Kenya, which randomly allocated cash transfers, found the income elasticity of food to be 0.87. Building on this, @purcell1967quantity found that income elasticities for items like poultry, fish, seafood, and fruits were below 0.5. This indicates that food is a normal commodity: as income increases, the demand for food also increases, but only slightly.
 
 Moreover, @andreyeva2010impact conducted a meta-analysis on the price elasticities of various food categories and discovered that essential items such as fish, beef, poultry, fruits, and vegetables had elasticities below 0.75. This suggests that when food prices rise, the decrease in demand is only slight.
 
-In essence, these findings show that there's only a modest increase in food demand as income rises and a moderate decrease as food prices go up. Consequently, changes in income don't lead to significant shifts in food demand. 
+In essence, these findings show that there's only a modest increase in food demand as income rises and a moderate decrease as food prices go up. This suggests changes in income do nott lead to significant shifts in food demand. 
 
 
 ## Weaknesses and next steps
 
 Our model's weaknesses stem from the data we utilized—quarterly data spanning from 2007 to 2022. This period was chosen to explore changes in the relationship between food expenditure and income, however, it also captures economic impact of COVID-19, which was not our intention. With the pandemic's onset in late 2020, disposable income surged due to social benefit programs (see @fig-1-2), while food expenditure remained relatively stable due to its essential nature (see @fig-1-1). This led to erratic swings in income and predictable changes in food spending, distorting our data.
 
-This distortion poses challenges for accurately estimating our target variable or estimand. Unforeseen economic fluctuations during the pandemic may skew the true relationship we seek to understand, reducing the model's external validity. The unique nature of the pandemic's shocks further limits the model's generalizability, especially considering variations in social benefit policies and lockdown measures among different countries. Consequently, applying our model to another country within the same timeframe may yield unreliable results due to differing policy responses to COVID-19.
+This distortion poses challenges for accurately estimating our target variable or estimand. Unforeseen economic fluctuations during the pandemic may skew the true relationship we seek to understand, reducing the model's external validity. The unique nature of the pandemic's shocks further limits the model's generalizability, especially considering variations in social benefit policies and lockdown measures among different countries. Consequently, applying our model to another country within the same time frame may yield unreliable results due to differing policy responses to COVID-19.
 
-In future iterations, a narrower timeframe excluding such large-scale global shocks would be prudent. This approach aims to enhance the model's external validity and clarify the estimand we are pursuing. 
+In future iterations, a narrower time frame excluding such large-scale global shocks would be prudent. This approach aims to enhance the model's external validity and clarify the estimand we are pursuing. 
 
 
 
