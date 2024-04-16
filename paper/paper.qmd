@@ -1,6 +1,6 @@
 ---
 title: "You have more money in your wallet. This does not mean you will spend extra on food"
-subtitle: "Examining the relationship between disposable income and food expenditure for American consumers"
+subtitle: "Examining the relationship between disposable income and food expenditure for American consumers from 2007-2022"
 author: Ahnaf Alam
 thanks: "Code and data are available at https://github.com/AhnafAlam1/income_and_expenditure"
 date: today
@@ -44,77 +44,13 @@ Food is something everyone needs to live. People might change what kinds of food
 
 Numerous studies, notably summarized by Ernst Engel's law, suggest that as income and family size increase, spending on food goes up. However, the proportion of income spent on food decreases [@lewbel2008engel]. This means wealthier families tend to spend more on food, but it is a smaller part of their overall income. Taking inspiration from Engel's law, we want to see how food spending changes when we account for other spending categories instead of just income differences across families. Additionally, most past studies used income as the predictor variable, but we're using disposable income because we think it gives a better idea of overall wealth. The estimand of this paper is the measure of how much food spending changes (in billions of USD) when disposable income increases by a billion USD.
 
-In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. 
+In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed any a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future.
 
 
-
-
+In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. Datasheet and model checks can be found under [Appendix -@sec-model-details]. 
 
 
 # Data {#sec-data}
-
-## Software and R-packages
-
-We create this project using statistical software, `R` [@citeR]. For cleaning and re-purposing the data, we used `tidyverse` [@tidy] package and graphs, we relied on `ggplot2` [@ggplot2]. The data used in this paper comes from `fredr` [@fredr] package. We further used `rstanarm` [@rstanarm] for modelling. Lastly, we used `kableExtra` [@kable] and `viridis` [@viridis] for aesthetics purposes.
-
-## Incorporating FRED data 
-
-We gathered our data from Federal Reserve Economic Data (FRED), an extensive online database housing a multitude of economic time series, both at the US national and international levels. Utilizing the `fredr` package, we integrated six distinct datasets into one dataframe. These datatsets were:
-
-- Real personal consumption expenditure: Food
-- Real disposable personal income
-- Real personal consumption expenditure: Durable Goods
-- Real personal consumption expenditure: Nondurable Goods
-- Real personal consumption expenditure: Services
-- Real personal consumption expenditure: Healthcare
-
-For a detailed breakdown of each dataset, refer to @tbl-1. Across all datasets, a few consistent features are notable. Firstly, we confined our data selection to the quarterly period spanning from 2007 to 2022. We anchored our starting point in 2007 due to the unavailability of durable/nondurable goods data prior to 2007. We were interested in a comprehensive 15-year modeling period, which culminated in 2022.
-
-All datasets underwent seasonal adjustment and were indexed to 2017 dollars. Seasonal adjustments mitigate the influence of periodic fluctuations, such as strikes or unusual weather events, which can obscure genuine economic trends. By referencing all data to the 2017 price level, we adjusted for inflation over time, facilitating accurate comparisons across various periods. Additionally, utilizing real economic data rather than nominal figures allowed for valid comparisons between different categories across time frames.
-
-## Dataset characteristics
-
-Each dataset is structured with five distinct columns, the most significant being "date" and "value." The "date" column denotes the specific day of data collection. In the case of quarterly data, observations are restricted to the first day of January, April, July, and October. Notably, FRED does not provide data for August or December quarters. This omission is primarily due to practical considerations, as certain data may only become available after the quarter's end, rendering updates before then unproductive.
-
-Furthermore, the "value" column records expenditures in billions of US dollars. For a comparative analysis of each category, please refer to @fig-2. The cleaned data utilized for modeling and analysis is detailed in @tbl-2. The datasheet is accessible in @sec-appen for further reference.
-
-
-## Measurement
-
-FRED datasets, essentially time series variants, are compiled by the US Federal Reserve and sourced from government agencies like the U.S. Census Bureau, Bureau of Labor Statistics, and U.S. Bureau of Economic Analysis (BEA), among others. These datasets are aggregated at the country level. We use national-level data because it provides a broader perspective on general economic trends in the U.S. All five datasets we have used originate from the BEA. The BEA gathers data from over 360 surveys and collections sponsored by various Federal and private agencies. Upon receiving these datasets, BEA makes adjustments to the raw survey data. For instance, they fill in missing gaps in the datasets. For example, when estimating changes in private inventories for Gross Domestic Product (GDP), the primary survey is the Census Bureau’s Monthly Wholesale Trade Survey does not include inventories from nonmerchant sellers. Therefore, BEA incorporates a separate survey to fill this gap, giving us a more comprehensive view of the overall economic conditions.
-
-FRED collaborates with both public and private organizations, such as the BEA, to populate its comprehensive database. The goal of FRED is to serve as a centralized data bank where you can find information on all facets of the U.S. economy, eliminating the need to search various agencies individually for data. However, FRED does make further adjustments to BEA datasets before releasing them. For example, when aggregating data through averaging, summing, or end-of-period calculations, FRED typically overlooks missing values, except for the first and last observations of each month [@fred].
-
-Missing values commonly occur during statutory holidays, when federal offices are closed. Consequently, during such weeks, FRED reports data for only six days, excluding the holiday. End-of-period calculations are adjusted accordingly, based on the remaining available days within the month, minus one. 
-
-
-```{r}
-#| label: fig-1
-#| fig-cap: Levels of real consumption expenditure and income expenditure, in billions of dollars, chained to 2017 prices
-#| fig-subcap: ["Food expenditure", "Income"]
-#| echo: false
-#| warning: false
-#| message: false
-#| layout-ncol: 2
-    
-data |>
-  ggplot(aes(x = date, y = food_expenditure)) +
-  geom_line() +
-  theme_minimal() +
-  labs(x = "Date",
-       y = "Changes in real food expenditure",
-       )
-
-data |>
-  ggplot(aes(x = date, y =income_expenditure)) +
-  geom_line() +
-  theme_minimal() +
-  labs(x = "Date",
-       y = "Changes in real disposable income",
-       )
-```
-
-
 
 ```{r}
 #| label: tbl-1
@@ -147,8 +83,101 @@ table1 %>%
   column_spec(1, width = "2cm") %>%
   column_spec(2, width = "14cm") %>%
   kable_styling(latex_options = "hold_position", font_size = 9, position = "center")
-
 ```
+
+## Software and R-packages
+
+We create this project using statistical software, `R` [@citeR]. For cleaning and re-purposing the data, we used `tidyverse` [@tidy] package and graphs, we relied on `ggplot2` [@ggplot2]. The data used in this paper comes from `fredr` [@fredr] package. We further used `rstanarm` [@rstanarm] and `modelsummary` [@ms] for modelling. Lastly, we used `kableExtra` [@kable] and `viridis` [@viridis] for aesthetics purposes. For editing texts, we used `rspell` library [@rspell].
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: tbl-2
+#| tbl-cap: "Cleaned data showing real expenditure by different categories (in billions of 2017 US dollars)"
+
+columns_to_format <- names(data)[-1]
+
+formatted_data <- data
+formatted_data[columns_to_format] <- lapply(data[columns_to_format], function(x) formatC(x, format = "f", digits = 2, big.mark = ","))
+
+formatted_data[1:12,] |> 
+  kable(col.names = c("Date", "Durable goods", "Non-durable goods", "Food", "Disposable income",
+                      "Healthcare", "Services"),
+        booktabs = TRUE,
+        linesep = "",
+        align = "c",
+        format = "latex") |> 
+  column_spec(c(1, 2, 3, 4, 5, 6, 7), width = "6em") |> 
+  kable_styling(font_size = 9, latex_options = "scale_down")  |>
+  add_footnote(c("Note: The table displays data from 2007-2009 to illustrate the aggregated clean data. Including the entire dataset would be redundant and unnecessarily clutter the display."))
+```
+
+
+
+
+## Incorporating FRED data 
+
+We gathered our data from Federal Reserve Economic Data (FRED), an extensive online database housing a multitude of economic time series, both at the US national and international levels. Utilizing the `fredr` package, we integrated six distinct datasets into one data frame. These datasets were:
+
+- Real personal consumption expenditure: Food
+- Real disposable personal income
+- Real personal consumption expenditure: Durable Goods
+- Real personal consumption expenditure: Nondurable Goods
+- Real personal consumption expenditure: Services
+- Real personal consumption expenditure: Healthcare
+
+For a detailed breakdown of each dataset, refer to @tbl-1. Across all datasets, a few consistent features are notable. Firstly, we confined our data selection to the quarterly period spanning from 2007 to 2022. We anchored our starting point in 2007 due to the unavailability of durable/nondurable goods data prior to 2007. We were interested in a comprehensive 15-year modeling period, which culminated in 2022.
+
+All datasets underwent seasonal adjustment and were indexed to 2017 dollars. Seasonal adjustments mitigate the influence of periodic fluctuations, such as strikes or unusual weather events, which can obscure genuine economic trends. By referencing all data to the 2017 price level, we adjusted for inflation over time, facilitating accurate comparisons across various periods. Additionally, utilizing real economic data rather than nominal figures allowed for valid comparisons between different categories across time frames
+
+## Dataset characteristics
+
+Each dataset is structured with five distinct columns, the most significant being "date" and "value." The "date" column denotes the specific day of data collection. In the case of quarterly data, observations are restricted to the first day of January, April, July, and October. Notably, FRED does not provide data for August or December quarters. This omission is primarily due to practical considerations, as certain data may only become available after the quarter's end, rendering updates before then unproductive.
+
+Furthermore, the "value" column records expenditures in billions of US dollars. For a comparative analysis of each category, please refer to @fig-2. The cleaned data utilized for modeling and analysis is detailed in @tbl-2. The datasheet is accessible in @sec-appen for further reference.
+
+
+## Measurement
+
+FRED datasets, essentially time series variants, are compiled by the US Federal Reserve and sourced from government agencies like the U.S. Census Bureau, Bureau of Labor Statistics, and U.S. Bureau of Economic Analysis (BEA), among others. These datasets are aggregated at the country level. We use national-level data because it provides a broader perspective on general economic trends in the U.S. All five datasets we have used originate from the BEA. The BEA gathers data from over 360 surveys and collections sponsored by various Federal and private agencies. Upon receiving these datasets, BEA makes adjustments to the raw survey data. For instance, they fill in missing gaps in the datasets. For example, when estimating changes in private inventories for Gross Domestic Product (GDP), the primary survey is the Census Bureau’s Monthly Wholesale Trade Survey does not include inventories from non-merchant sellers. Therefore, BEA incorporates a separate survey to fill this gap, giving us a more comprehensive view of the overall economic conditions.
+
+FRED collaborates with both public and private organizations, such as the BEA, to populate its comprehensive database. The goal of FRED is to serve as a centralized data bank where you can find information on all facets of the U.S. economy, eliminating the need to search various agencies individually for data. However, FRED does make further adjustments to BEA datasets before releasing them. For example, when aggregating data through averaging, summing, or end-of-period calculations, FRED typically overlooks missing values, except for the first and last observations of each month [@fred].
+
+Missing values commonly occur during statutory holidays, when federal offices are closed. Consequently, during such weeks, FRED reports data for only six days, excluding the holiday. End-of-period calculations are adjusted accordingly, based on the remaining available days within the month, minus one. 
+
+All datasets underwent rigorous cleaning and preparation by both FRED and BEA before being made available on the FRED website. Consequently, we found no need for extensive cleaning on our part. The data was complete with no missing values, and both columns and rows were appropriately labeled and displayed. For better readability, we reorganized the columns and consolidated all five datasets into one dataframe, which we used for analysis.
+
+
+```{r}
+#| label: fig-1
+#| fig-cap: Levels of real consumption expenditure and income expenditure, in billions of dollars, chained to 2017 prices
+#| fig-subcap: ["Food expenditure", "Income"]
+#| echo: false
+#| warning: false
+#| message: false
+#| layout-ncol: 2
+    
+data |>
+  ggplot(aes(x = date, y = food_expenditure)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Date",
+       y = "Changes in real food expenditure",
+       )
+
+data |>
+  ggplot(aes(x = date, y =income_expenditure)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Date",
+       y = "Changes in real disposable income",
+       )
+```
+
+
+
+
+
 
 
 ```{r}
@@ -179,93 +208,13 @@ figure <- data_long |>
   geom_area() +
   labs(title = "Contribution of Expenditure Categories Over Time",
        x = "Date",
-       y = "Expenditure",
+       y = "Expenditure (in billions of 2017 USD)",
        fill = "Categories") +
   theme_minimal() +
   scale_fill_manual(values = col, labels = newnames, name = "Categories")
 print(figure)
 
 ```
-
-
-
-
-```{r}
-#| echo: false
-#| warning: false
-#| label: tbl-2
-#| tbl-cap: "Cleaned data showing real expenditure by different categories (in billions of 2017 US dollars)"
-
-columns_to_format <- names(data)[-1]
-
-formatted_data <- data
-formatted_data[columns_to_format] <- lapply(data[columns_to_format], function(x) sprintf("%.2f", x))
-
-
-formatted_data[1:12,] |> 
-  kable(col.names = c("Date", "Durable goods", "Non-durable goods", "Food", "Disposable income",
-                      "Healthcare", "Services"),
-        booktabs = TRUE,
-        linesep = "",
-        align = "c",
-        format.args = list(big.mark = ",")
-        ) |>
-  column_spec(c(1, 2, 3, 4, 5, 6, 7), width = "6em") |> 
-  kable_styling(font_size = 9, latex_options = "scale_down")  |>
-  add_footnote(c("Note: The table displays data from 2007-2009 to illustrate the of the aggregated clean data. Including the entire dataset would be redundant and unnecessarily clutter the display."))
-```
-
-
-
-```{r}
-#| label: fig-3
-#| fig-cap: Relationship between increases in disposable income and increases in food expenditure, between 2007 and 2022.
-#| echo: false
-#| warning: false
-#| message: false
-
-data |>
-  ggplot(aes(x = income_expenditure, y = food_expenditure)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(
-    method = "lm",
-    se = TRUE,
-    color = "black",
-    linetype = "dashed",
-    formula = y ~ x
-  ) +
-  theme_classic() + 
-  labs(
-    x = "Real increase in disposable income",
-    y = "Real increase in food expenditure"
-  )
-```
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-#| label: tbl-3
-#| tbl-cap: Summary results for both models
-
-
-first_model <- 
-  readRDS(file = here::here("models/model_1.rds"))
-
-second_model <- 
-  readRDS(file = here::here("models/model_2.rds"))
-
-modelsummary::modelsummary(
-  list(
-    "Model 1" = first_model,
-    "Model 2" = second_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
-```
-
-
-
 
 # Model {#sec-model}
 
@@ -308,6 +257,32 @@ y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
 
 ## Model justification
 
+
+```{r}
+#| label: fig-3
+#| fig-cap: Relationship between increases in disposable income and increases in food expenditure, between 2007 and 2022.
+#| echo: false
+#| warning: false
+#| message: false
+
+data |>
+  ggplot(aes(x = income_expenditure, y = food_expenditure)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(
+    method = "lm",
+    se = TRUE,
+    color = "black",
+    linetype = "dashed",
+    formula = y ~ x
+  ) +
+  theme_classic() + 
+  labs(
+    x = "Real increase in disposable income",
+    y = "Real increase in food expenditure"
+  )
+```
+
+
 We anticipate a positive correlation between income and food expenditure. As depicted in @fig-3, an increase in disposable income corresponds to a similar rise in food expenditure. Additionally, @fig-1 compares these variables over time, revealing parallel growth patterns. Both exhibit a consistent, exponential increase between 2010 and 2020, followed by a divergence after 2020, likely due to the COVID-19 downturn.
 
 @sekhampu2012socio analyzes data from South Africa and employs a multiple linear regression model. The study concludes that household income, size, age, and employment status exert a significant positive influence on food expenditure. Likewise, @liu2019off utilizes Chinese data and a two-stage least squares estimator. Their findings reveal that for every 1,000 yuan increase in per-capita income, food expenditure rises by 61 yuan. Drawing from our exploratory data analysis and existing theories, we hypothesize a positive correlation between food expenditure and income levels. Therefore, we believe linear models would be appropriate for modelling our hypothesis. 
@@ -325,7 +300,7 @@ Our findings are outlined in @tbl-3. In simple linear regression, we observed an
 
 In multiple linear regression, we found an estimated intercept of -97.40 billion USD. With each $1 billion USD increase in income, food expenditure increased by 20 million USD. Similar to the simple regression model, the standard deviation is negligibly small.
 
-Both models exhibit similar adjusted $R^2$ values, yet the second model slightly outperforms the first with a higher value (0.993 vs 0.990), indicating a superior fit. Notably, the root mean square error (RSME) for the second model is substantially lower than that of the first (10.36 vs 27.49), indicating enhanced predictive accuracy.
+Both models exhibit similar adjusted $R^2$ values, yet the second model slightly outperforms the first with a higher value (0.993 vs 0.990), indicating a superior fit. Notably, the root-mean-square error (RSME) for the second model is substantially lower than that of the first (10.36 vs 27.49), indicating enhanced predictive accuracy.
 
 
 @fig-1 illustrates quarterly changes in disposable income and food expenditure from 2007 to 2022. Both variables show consistent growth trends, with 33.9% increase in disposable income and 32.5% increase in expenditure in food in this period. We see a notable surge in disposable income in 2020 due to COVID-era relief efforts. However, this increase was followed by a decline as restrictions eased, allowing for increased spending towards the end of 2021.
@@ -333,6 +308,29 @@ Both models exhibit similar adjusted $R^2$ values, yet the second model slightly
 @fig-2 displays the distribution of expenditure across categories, highlighting durable and non-durable goods as the largest expenditures. This aligns with expectations given the nature of these commodities. Following closely are food expenditure and disposable income, reflecting a strong correlation evident in @fig-3, where a clear linear relationship is observed with small standard deviations. Finally, healthcare and services expenditure are clustered together.
 
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: tbl-3
+#| tbl-cap: Summary results simple linear regression and multiple linear linear regression. 
+
+
+first_model <- 
+  readRDS(file = here::here("models/model_1.rds"))
+
+second_model <- 
+  readRDS(file = here::here("models/model_2.rds"))
+
+modelsummary::modelsummary(
+  list(
+    "Model 1" = first_model,
+    "Model 2" = second_model
+  ),
+  statistic = "mad",
+  fmt = 2
+)
+```
 
 # Discussion {#sec-dis}
 
@@ -347,7 +345,7 @@ A factor that might clarify the low economic significance is that consumers tend
 
 ## Interpreting consumer behavior
 
-Current research suggests that higher income tends to result in increased expenditure on durable goods, surpassing that of other consumable products. Consumers often allocate the majority of their additional income towards items that provide utility over an extended period rather than those consumed in a single instance. Using a linear probability function, @lee1964income showed that consumers typically increase their spending on durable goods in response to income growth and resist reducing it even when income decreases. This pattern was evident during the COVID-19 pandemic, where heightened disposable income led to above-average spending on durable goods such as furniture, appliances, motor vehicles, and recreational items [@tauber2021why]. Therefore, it is plausible that food expenditure remains relatively stable compared to expenditures on durable goods, which may fluctuate more significantly in response to changes in income.
+Current research suggests that higher income tends to result in increased expenditure on durable goods, surpassing that of other consumable products. Consumers often allocate the majority of their additional income towards items that provide utility over an extended period, rather than those consumed in a single instance. Using a linear probability function, @lee1964income showed that consumers typically increase their spending on durable goods in response to income growth and resist reducing it even when income decreases. This pattern was evident during the COVID-19 pandemic, where heightened disposable income led to above-average spending on durable goods such as furniture, appliances, motor vehicles, and recreational items [@tauber2021why]. Therefore, it is plausible that food expenditure remains relatively stable compared to expenditures on durable goods, which may fluctuate more significantly in response to changes in income.
 
 ## Factoring in elasticities {#sec-ela}
 
@@ -370,7 +368,6 @@ In future iterations, a narrower timeframe excluding such large-scale global sho
 
 
 
-\newpage
 
 \appendix
 
@@ -672,9 +669,8 @@ plot(first_model, "trace")
 
 plot(second_model, "trace")
 
-
-
 ```
+
 
 
 
