@@ -50,3 +50,4 @@ data <- merge(d_f_i, healthcare_services,
 
 #### Save data ####
 write_csv(data, "data/analysis_data/data.csv")
+write_parquet(analysis_data, "data/analysis_data/data.parquet")
