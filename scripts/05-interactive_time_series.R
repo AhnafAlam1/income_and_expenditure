@@ -21,4 +21,14 @@ p <- plot_ly(data, x = ~date) %>%
 
 p
 
-htmlwidgets::saveWidget(widget = p, file = "interactive_plot.html")
+save_html(p, file = "standalone_plot.html")
+
+ui <- fluidPage(
+  includeHTML("standalone_plot.html")
+)
+
+
+server <- function(input, output, session) {}
+
+
+shinyApp(ui, server)
