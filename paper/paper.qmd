@@ -85,7 +85,7 @@ table1 %>%
 
 ## Software and R-packages
 
-We create this project using statistical software, `R` [@citeR]. For cleaning and re-purposing the data, we used `tidyverse` [@tidy] package and graphs, we relied on `ggplot2` [@ggplot2]. The data used in this paper comes from `fredr` [@fredr] package. We further used `rstanarm` [@rstanarm] and `modelsummary` [@ms] for modelling. Lastly, we used `kableExtra` [@kable] and `viridis` [@viridis] for aesthetics purposes. For editing texts, we used `rspell` library [@rspell].
+We create this project using statistical software, `R` [@citeR]. For cleaning and re-purposing the data, we used `tidyverse` [@tidy] package and graphs, we relied on `ggplot2` [@ggplot2]. The data used in this paper comes from `fredr` [@fredr] package. We further used `rstanarm` [@rstanarm] and `modelsummary` [@ms] for modelling. Lastly, we used `kableExtra` [@kable] and `viridis` [@viridis] for aesthetics purposes. For editing texts, we used `rspell` library [@rspell]. We created interactive map using `plotly` [@plotly] library and published through `shiny` library [@shiny].
 
 ```{r}
 #| echo: false
@@ -107,7 +107,7 @@ formatted_data[1:12,] |>
         format = "latex") |> 
   column_spec(c(1, 2, 3, 4, 5, 6, 7), width = "6em") |> 
   kable_styling(font_size = 9, latex_options = "scale_down")  |>
-  add_footnote(c("Note: The table displays data from 2007-2009 to illustrate the aggregated clean data. Including the entire dataset would be redundant and unnecessarily clutter the display."))
+  add_footnote(c("Note: The table displays data from 2007-2009 to illustrate the aggregated clean data. Including the entire dataset would be redundant and unnecessarily clutter the display. To get a better understanding of how the data looks like in entirety, please check out the interactive graph. The link can be found on the Github page"))
 ```
 
 
@@ -124,13 +124,13 @@ We gathered our data from Federal Reserve Economic Data (FRED), an extensive onl
 
 For a detailed breakdown of each dataset, refer to @tbl-1. Across all datasets, a few consistent features are notable. Firstly, we confined our data selection to the quarterly period spanning from 2007 to 2022. We anchored our starting point in 2007 due to the unavailability of durable/nondurable goods data prior to 2007. We were interested in a comprehensive 15-year modeling period, which culminated in 2022.
 
-All datasets underwent seasonal adjustment and were indexed to 2017 dollars. Seasonal adjustments mitigate the influence of periodic fluctuations, such as strikes or unusual weather events, which can obscure genuine economic trends. By referencing all data to the 2017 price level, we adjusted for inflation over time, facilitating accurate comparisons across various periods. Additionally, utilizing real economic data rather than nominal figures allowed for valid comparisons between different categories across time frames
+All datasets underwent seasonal adjustment and were indexed to 2017 dollars. Seasonal adjustments mitigate the influence of periodic fluctuations, such as strikes or unusual weather events, which can obscure genuine economic trends. By referencing all data to the 2017 price level, we adjusted for inflation over time, facilitating accurate comparisons across various periods. Additionally, utilizing real economic data rather than nominal figures allowed for valid comparisons between different categories across time frames.
 
 ## Dataset characteristics
 
 Each dataset is structured with five distinct columns, the most significant being "date" and "value." The "date" column denotes the specific day of data collection. In the case of quarterly data, observations are restricted to the first day of January, April, July, and October. Notably, FRED does not provide data for August or December quarters. This omission is primarily due to practical considerations, as certain data may only become available after the quarter's end, rendering updates before then unproductive.
 
-Furthermore, the "value" column records expenditures in billions of US dollars. For a comparative analysis of each category, please refer to @fig-2. The cleaned data utilized for modeling and analysis is detailed in @tbl-2. The datasheet is accessible in @sec-appen for further reference.
+Furthermore, the "value" column records expenditures in billions of US dollars. For a comparative analysis of each category, please refer to @fig-2. The cleaned data utilized for modeling and analysis is detailed in @tbl-2. The datasheet is accessible in @sec-appen for further reference. You can find an interactive plot showing the evolution of each expenditure variable on our GitHub page.
 
 
 ## Measurement
