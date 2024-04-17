@@ -170,12 +170,6 @@ data |>
        )
 ```
 
-
-
-
-
-
-
 ```{r}
 #| label: fig-2
 #| fig-cap: Expenditure for different categories, in billions of 2017 dollars
@@ -648,7 +642,7 @@ pp_check(second_model) +
 
 ## Diagnostics
 
-We use ran trace plots for both models and we are interested in understanding whether the algorithm ran into any issues [@Alexander_2023]. Looking at the plots for both models, we do not encounter any out of the ordinary events.
+We ran trace plots for both models as we were interested in understanding whether the algorithm ran into any issues [@Alexander_2023]. Looking at the plots for both models, we do not encounter any out of the ordinary events.
 
 ```{r}
 #| echo: false
