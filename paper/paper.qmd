@@ -1,5 +1,5 @@
 ---
-title: "You have more money in your wallet. This does not mean you will spend extra on food"
+title: "Income's Impact on Food Spending "
 subtitle: "Examining the relationship between disposable income and food expenditure for American consumers from 2007-2022"
 author: Ahnaf Alam
 thanks: "Code and data are available at https://github.com/AhnafAlam1/income_and_expenditure"
@@ -27,6 +27,7 @@ library(kableExtra)
 library(viridis)
 library(testthat)
 library(fredr)
+library(DiagrammeR)
 
 
 data <- read_csv(here::here("data/analysis_data/data.csv"))
@@ -276,9 +277,11 @@ We anticipate a positive correlation between income and food expenditure. As dep
 
 @sekhampu2012socio analyzes data from South Africa and employs a multiple linear regression model. The study concludes that household income, size, age, and employment status exert a significant positive influence on food expenditure. Likewise, @liu2019off utilizes Chinese data and a two-stage least squares estimator. Their findings reveal that for every 1,000 yuan increase in per-capita income, food expenditure rises by 61 yuan. Drawing from our exploratory data analysis and existing theories, we hypothesize a positive correlation between food expenditure and income levels. Therefore, we believe linear models would be appropriate for modelling our hypothesis. 
 
-We utilize two linear models in our analysis: simple linear regression and multiple regression. Simple linear regression enables us to easily quantify the linear association between food expenditure and disposable income, as illustrated by @fig-3. However, this model has limitations. Most notably, it does not account for confounding variables, and it requires us to make unrealistic assumptions about the independence of the error term ($\epsilon$) and the predictor variable, income. This assumption implies that food expenditure and income are entirely independent of each other, which is problematic. Factors like economic downturns, income levels, and other variables can correlate with our model variables.
+We employ two linear models in our analysis: simple linear regression and multiple regression. Simple linear regression provides a straightforward way to quantify the linear relationship between food expenditure and disposable income, as depicted in @fig-3. However, this model has limitations. Specifically, it does not consider confounding variables and relies on unrealistic assumptions about the independence between the error term ($\epsilon$) and the predictor variable, income. This assumption suggests that food expenditure and income are completely independent, which is not the case. Variables like economic downturns and income levels can correlate with our model variables.
 
-To address these issues, we employ a multiple linear regression model. This model helps us control for potential confounding variables, such as expenditure on non-durable goods, which may influence consumer expenditure on food. Using multiple linear regression allows us to better isolate the effect of income on food expenditure.
+To overcome these limitations, we use a multiple linear regression model. This approach allows us to control for potential confounding variables, such as expenditure on non-durable goods, which can influence consumer spending on food. For instance, when disposable income rises, people might choose to prioritize spending on non-durable goods over food, leading to a decrease in food expenditure. This means that non-durable spending directly affects income and indirectly impacts food expenditure—a relationship that simple linear regression fails to capture.
+
+We hypothesize that durable goods, non-durable goods, healthcare spending, and services spending are key confounding variables of interest because they represent a significant portion of consumer spending. By employing multiple linear regression, we can account for these variables and more accurately isolate the effect of income on food expenditure.
 
 Between the two models, the multiple linear regression model may be more preferable than the simple linear regression model. Simple linear regression requires unrealistic assumptions that the multiple linear regression model relaxes. Furthermore, posterior predictive checks conducted for both models suggest that the multiple regression model may offer a better fit than the simple linear regression model. For more details, please refer to @sec-model-details.
 
