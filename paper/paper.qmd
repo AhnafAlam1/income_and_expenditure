@@ -46,7 +46,7 @@ Food is something everyone needs to live. People might change what kinds of food
 Numerous studies, notably summarized by Ernst Engel's law, suggest that as income and family size increase, spending on food goes up. However, the proportion of income spent on food decreases [@lewbel2008engel]. This means wealthier families tend to spend more on food, but it is a smaller part of their overall income. Taking inspiration from Engel's law, we want to see how food spending changes when we account for other spending categories instead of just income differences across families. Additionally, most past studies used income as the predictor variable, but we're using disposable income because we think it gives a better idea of overall wealth. The estimand of this paper is the measure of how much food spending changes (in billions of USD) when disposable income increases by a billion USD.
 
 
-In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation of the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. Datasheet and model checks can be found under [Appendix -@sec-model-details]. 
+In @sec-data, we discuss the data we used for this project, including information of the software and packages used. This is followed by a explanation on the models that we used, which can be found in @sec-model. In @sec-res, we present the results of the models and @sec-dis, we interpret these results, and consider how savings, consumer preference and elasticies play into this discussion on food expenditure and income. We finish the project with weaknesses and potential areas of improvement in the future. Datasheet and model checks can be found under [Appendix -@sec-model-details]. 
 
 
 # Data {#sec-data}
@@ -67,9 +67,9 @@ table1 <-
                       "Durable goods are goods that are more for future consumption than immediate consumption. These types
                       of goods provides utlity over a length of period. Examples include machinery, tools, appliances
                       among others",
-                      "Durable goods are anything that are generally consumed within a short period of time. Examples
+                      "Non-durable goods are anything that are generally consumed within a short period of time. Examples
                       include food, clothing, cosmetics etc",
-                      "Expenditure in food by all Americans in a time period",
+                      "Expenditure in food by all Americans in a given time period",
                       "Refers to total income that is availble to individuals for consumption after deducing taxes",
                       "The category reports on total expenditure on healthcare services, including medical treatments,
                       medicine cost, physician services among other services",
@@ -114,7 +114,7 @@ formatted_data[1:12,] |>
 
 ## Incorporating FRED data 
 
-We gathered our data from Federal Reserve Economic Data (FRED), an extensive online database housing a multitude of economic time series, both at the US national and international levels. Utilizing the `fredr` package, we integrated six distinct datasets into one data frame. These datasets were:
+We gathered our data from Federal Reserve Economic Data (FRED), an extensive online database housing a multitude of economic time series data, both at the US national and international levels. Utilizing the `fredr` package, we integrated six distinct datasets into one data frame. These datasets were titled:
 
 - Real personal consumption expenditure: Food
 - Real disposable personal income
@@ -136,7 +136,7 @@ Furthermore, the "value" column records expenditures in billions of US dollars. 
 
 ## Measurement
 
-FRED datasets, essentially time series variants, are compiled by the US Federal Reserve and sourced from government agencies like the U.S. Census Bureau, Bureau of Labor Statistics, and U.S. Bureau of Economic Analysis (BEA), among others. These datasets are aggregated at the country level. We use national-level data because it provides a broader perspective on general economic trends in the U.S. All five datasets we have used originate from the BEA. The BEA gathers data from over 360 surveys and collections sponsored by various Federal and private agencies. Upon receiving these datasets, BEA makes adjustments to the raw survey data. For instance, they fill in missing gaps in the datasets. For example, when estimating changes in private inventories for Gross Domestic Product (GDP), the primary survey is the Census Bureau’s Monthly Wholesale Trade Survey does not include inventories from non-merchant sellers. Therefore, BEA incorporates a separate survey to fill this gap, giving us a wider view of the overall economic conditions.
+FRED datasets, essentially time series variants, are compiled by the US Federal Reserve and sourced from government agencies like the U.S. Census Bureau, Bureau of Labor Statistics, and U.S. Bureau of Economic Analysis (BEA), among others. These datasets are aggregated at the country level. We use national-level data because it provides a broader perspective on general economic trends in the U.S. All five datasets we have used originate from the BEA. The BEA gathers data from over 360 surveys and these collections are sponsored by various Federal and private agencies. Upon receiving these datasets, BEA makes adjustments to the raw survey data. For example, they fill in missing gaps in the datasets. The process requires estimating changes in private inventories for Gross Domestic Product (GDP), the primary survey, Census Bureau’s Monthly Wholesale Trade Survey, does not include inventories from non-merchant sellers. Therefore, BEA incorporates a separate survey to fill this gap, giving us a wider view of the overall economic conditions.
 
 FRED collaborates with both public and private organizations, such as the BEA, to populate their database. The goal of FRED is to serve as a centralized data bank where you can find information on all facets of the U.S. economy, eliminating the need to search various agencies individually for data. However, FRED does make further adjustments to BEA datasets before releasing them. For example, when aggregating data through averaging, summing, or end-of-period calculations, FRED typically overlooks missing values, except for the first and last observations of each month [@fred].
 
@@ -290,10 +290,11 @@ Between the two models, the multiple linear regression model may be more prefera
 
 Our findings are outlined in @tbl-3. In simple linear regression, we observed an estimated intercept of 24.07 billion USD. Additionally, for every 1 billion USD increase in disposable income, there's a corresponding rise in food expenditure of $70 million USD. The small standard deviation suggests a low level of variability and uncertainty.
 
-In multiple linear regression, we found an estimated intercept of -97.40 billion USD. With each $1 billion USD increase in income, food expenditure increased by 20 million USD. Similar to the simple regression model, the standard deviation is negligibly small.
+In our multiple linear regression analysis, we estimated an intercept of -$97.40 billion USD. For every $1 billion USD rise in income, food expenditure increased by $20 million USD. Consistent with the simple regression model, the standard deviation remains insignificantly small.
 
-Both models exhibit similar adjusted $R^2$ values, yet the second model slightly outperforms the first with a higher value (0.993 vs 0.990), indicating a superior fit. Notably, the root-mean-square error (RSME) for the second model is substantially lower than that of the first (10.36 vs 27.49), indicating enhanced predictive accuracy.
+Durable goods expenditure exhibits a negative relationship with food expenditure, with a decrease of $15 million. Similarly, services expenditure sees a decrease of $1 million. Thus, the model suggests that an increase in spending on durable goods and services could lead to a decrease in food expenditure. Conversely, there is a positive relationship between expenditure on nondurable goods and food, with a notable increase of $47 million in food spending for increases in nondurable goods spending. This relationship suggests that these expenditures may be complements of each other. Lastly, we observed no significant relationship between healthcare spending and food expenditure. Intuitively, this makes sense, as both categories encompass essential items and are less susceptible to changes in the economic environment.
 
+Both models exhibit similar adjusted $R^2$ values, yet the second model slightly outperforms the first with a higher value (0.993 vs 0.990), indicating a superior fit. Notably, the root-mean-square error (RSME) for the second model is substantially lower than that of the first (10.36 vs 27.49), indicating better predictive accuracy.
 
 @fig-1 illustrates quarterly changes in disposable income and food expenditure from 2007 to 2022. Both variables show consistent growth trends, with 33.9% increase in disposable income and 32.5% increase in expenditure in food in this period. We see a notable surge in disposable income in 2020 due to COVID-era relief efforts. However, this increase was followed by a decline as restrictions eased, allowing for increased spending towards the end of 2021.
 
@@ -332,7 +333,7 @@ modelsummary::modelsummary(
 
 ## Accounting for savings 
 
-A factor that might clarify the low economic significance is that consumers tend to opt for saving their additional income rather than spending it. This aligns with existing economic theories, as suggested by [@krugman], which indicate that consumption increases only slightly in response to income growth, as individuals prefer to set aside funds for "rainy day". This tendency becomes apparent during periods of heightened economic uncertainty, when people tend to prioritize saving as a precautionary measure for the future. @mody2012precautionary explores economic downturns and savings rates further, finding that in advanced economies, income uncertainty correlates with higher household savings. Additionally, @lusk2021consumer explores spending behavior, particularly focusing on food expenditures during the COVID-19 pandemic, revealing a typical decrease in food spending during recessions. We see this concept playing out in @fig-2, where expenditure decreases on all consumption sectors, right around the start of COVID-19 pandemic in 2020. These findings suggest that an elevated level of saving could indeed be a reason why individuals opt to reduce their expenditure on food and prioritize saving for future consumption.
+A factor that might clarify the low economic significance is that consumers tend to opt for saving their additional income rather than spending it. This aligns with existing economic theories, as suggested by @krugman, which indicates that consumption increases only slightly in response to income growth, as individuals prefer to set aside funds for "rainy day". This tendency becomes apparent during periods of heightened economic uncertainty, when people tend to prioritize saving as a precautionary measure for the future. @mody2012precautionary explores economic downturns and savings rates further, finding that in advanced economies, income uncertainty correlates with higher household savings. Additionally, @lusk2021consumer explores spending behavior, particularly focusing on food expenditures during the COVID-19 pandemic, revealing a typical decrease in food spending during recessions. We see this concept playing out in @fig-2, where expenditure decreases on all consumption sectors, right around the start of COVID-19 pandemic in 2020. These findings suggest that an elevated level of saving could indeed be a reason why individuals opt to reduce their expenditure on food and prioritize saving for future consumption.
 
 
 ## Interpreting consumer behavior
@@ -347,16 +348,16 @@ A study by @almaas2019income in Kenya, which randomly allocated cash transfers, 
 
 Moreover, @andreyeva2010impact conducted a meta-analysis on the price elasticities of various food categories and discovered that essential items such as fish, beef, poultry, fruits, and vegetables had elasticities below 0.75. This suggests that when food prices rise, the decrease in demand is only slight.
 
-In essence, these findings show that there's only a modest increase in food demand as income rises and a moderate decrease as food prices go up. This suggests changes in income do nott lead to significant shifts in food demand. 
+In essence, these findings show that there's only a modest increase in food demand as income rises and a moderate decrease as food prices go up. This suggests changes in income do not lead to significant shifts in food demand. 
 
 
 ## Weaknesses and next steps
 
-Our model's weaknesses stem from the data we utilized—quarterly data spanning from 2007 to 2022. This period was chosen to explore changes in the relationship between food expenditure and income, however, it also captures economic impact of COVID-19, which was not our intention. With the pandemic's onset in late 2020, disposable income surged due to social benefit programs (see @fig-1-2), while food expenditure remained relatively stable due to its essential nature (see @fig-1-1). This led to erratic swings in income and predictable changes in food spending, distorting our data.
+Our model's weaknesses stem from the data we utilized—quarterly data spanning from 2007 to 2022. This period was chosen to explore changes in the relationship between food expenditure and income, however, it also captures economic impact of COVID-19, which was not our intention. With the pandemic's onset in late 2020, disposable income surged due to social benefit programs (see @fig-1-2), while food expenditure remained relatively stable due to it's essential nature (see @fig-1-1). This led to erratic swings in income and predictable changes in food spending, distorting our data.
 
 This distortion poses challenges for accurately estimating our target variable or estimand. Unforeseen economic fluctuations during the pandemic may skew the true relationship we seek to understand, reducing the model's external validity. The unique nature of the pandemic's shocks further limits the model's generalizability, especially considering variations in social benefit policies and lockdown measures among different countries. Consequently, applying our model to another country within the same time frame may yield unreliable results due to differing policy responses to COVID-19.
 
-In future iterations, a narrower time frame excluding such large-scale global shocks would be prudent. This approach aims to enhance the model's external validity and clarify the estimand we are pursuing. 
+In future iterations, a narrower time frame excluding such large-scale global shocks would be more ideal. This would enhance the model's external validity and give us an un-biased estimator for our estimand. 
 
 
 

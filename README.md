@@ -1,4 +1,4 @@
-# An investigation into disposable income and food expenditure
+# Exploring how food spending changes to income shocks
 
 ## Overview
 
